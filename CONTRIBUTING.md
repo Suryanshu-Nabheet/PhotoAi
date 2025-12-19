@@ -32,7 +32,7 @@ Unsure where to begin contributing to PhotoAI? You can start by looking through 
 #### Local Development
 
 1. Fork the repo.
-2. Clone your fork: `git clone https://github.com/YOUR_USERNAME/PhotoAi.git`
+2. Clone your fork: `git clone https://github.com/Suryanshu-Nabheet/PhotoAI.git`
 3. Install dependencies: `pnpm install`
 4. Create a branch: `git checkout -b my-new-feature`
 5. Make your changes and commit them: `git commit -m 'Add some feature'`
