@@ -18,35 +18,67 @@ import { PersonSelector } from "@/components/dashboard/PersonSelector";
 // and remove the 'Models' import.
 
 export function GenerateImage() {
-  const [prompt, setPrompt] = useState("");
-  const [selectedPersonId, setSelectedPersonId] = useState<string>();
-  const [isGenerating, setIsGenerating] = useState(false);
-  const { getToken } = useAuth();
+  const [generatedImages, setGeneratedImages] = useState<string[]>([]);
+  const [requestId, setRequestId] = useState<string>();
 
   const handleGenerate = async () => {
     if (!prompt || !selectedPersonId) return;
 
     setIsGenerating(true);
+    setGeneratedImages([]); // Clear previous
+    setRequestId(undefined);
+
     try {
       const token = await getToken();
-      await axios.post(
+      const response = await axios.post(
         `${BACKEND_URL}/ai/generate`,
         {
           prompt,
-          modelId: selectedPersonId, // Map personId to modelId for backend
+          modelId: selectedPersonId,
           num: 1,
         },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      const { requestId } = response.data;
+      setRequestId(requestId);
       toast.success("Image generation started!");
       setPrompt("");
+
+      // Start polling
+      pollStatus(requestId);
     } catch (error) {
       toast.error("Failed to generate image");
-    } finally {
       setIsGenerating(false);
     }
+  };
+
+  const pollStatus = async (id: string) => {
+    const token = await getToken();
+    const interval = setInterval(async () => {
+      try {
+        const res = await axios.get(`${BACKEND_URL}/ai/status/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const { status, result, error } = res.data.status;
+
+        if (status === "completed") {
+          clearInterval(interval);
+          setGeneratedImages(result);
+          setIsGenerating(false);
+          toast.success("Generation complete!");
+        } else if (status === "failed") {
+          clearInterval(interval);
+          setIsGenerating(false);
+          toast.error(error || "Generation failed");
+        }
+      } catch (e) {
+        clearInterval(interval);
+        setIsGenerating(false);
+        console.error("Polling error", e);
+      }
+    }, 2000);
   };
 
   return (
@@ -72,6 +104,7 @@ export function GenerateImage() {
           <Textarea
             className="w-full min-h-24"
             onChange={(e) => setPrompt(e.target.value)}
+            value={prompt}
           />
         </motion.div>
 
@@ -83,9 +116,10 @@ export function GenerateImage() {
               variant={"outline"}
               className="relative z-20 cursor-pointer"
             >
-              Generate Image <Sparkles size={24} />
+              {isGenerating ? "Generating..." : "Generate Image"}{" "}
+              <Sparkles size={24} className="ml-2" />
             </Button>
-            {prompt && selectedPersonId && (
+            {prompt && selectedPersonId && !isGenerating && (
               <GlowEffect
                 colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
                 mode="colorShift"
@@ -96,6 +130,29 @@ export function GenerateImage() {
             )}
           </div>
         </div>
+
+        {/* Results Section */}
+        {generatedImages.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8"
+          >
+            {generatedImages.map((img, i) => (
+              <div
+                key={i}
+                className="relative aspect-square rounded-lg overflow-hidden border border-muted"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={img}
+                  alt="Generated"
+                  className="object-cover w-full h-full"
+                />
+              </div>
+            ))}
+          </motion.div>
+        )}
       </div>
     </motion.div>
   );
