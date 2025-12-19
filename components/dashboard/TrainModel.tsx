@@ -186,12 +186,41 @@ export default function Train() {
           </div>
 
           <div className="space-y-2">
-            <Label>Training Images</Label>
+            <Label>Training Images (10-20 photos)</Label>
             <UploadModal
-              handleUpload={(files) => {
-                // Mocking zip URL creation for now
-                setZipUrl(files[0]?.name ?? "images.zip");
-                toast.success("Images uploaded (mock)");
+              handleUpload={async (files) => {
+                if (files.length < 5) {
+                  toast.error("Please upload at least 5 images");
+                  return;
+                }
+                const loadingToast = toast.loading(
+                  "Compressing and uploading images..."
+                );
+                try {
+                  // 1. Zip the files
+                  const JSZip = (await import("jszip")).default;
+                  const zip = new JSZip();
+                  files.forEach((file) => {
+                    zip.file(file.name, file);
+                  });
+                  const zipBlob = await zip.generateAsync({ type: "blob" });
+
+                  // 2. Upload to API
+                  const formData = new FormData();
+                  formData.append("file", zipBlob, "images.zip");
+
+                  const response = await axios.post("/api/upload", formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                  });
+
+                  setZipUrl(response.data.url);
+                  toast.success("Images uploaded successfully!", {
+                    id: loadingToast,
+                  });
+                } catch (err) {
+                  console.error(err);
+                  toast.error("Failed to upload images", { id: loadingToast });
+                }
               }}
               uploadProgress={0}
               isUploading={false}

@@ -1,5 +1,0 @@
-redis==5.0.1
-bullmq==0.1.0
-requests==2.31.0
-Pillow==10.2.0
-websocket-client==1.7.0

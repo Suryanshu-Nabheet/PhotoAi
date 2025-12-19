@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GenerateImage } from "@/components/dashboard/GenerateImage";
 import { Packs } from "@/components/dashboard/Packs";
 import { Camera } from "@/components/dashboard/Camera";
-import { LandingHeader } from "@/components/landing/header";
+import { Header } from "@/components/header";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 
@@ -14,7 +14,7 @@ import Train from "@/components/dashboard/TrainModel";
 export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-black">
-      <LandingHeader />
+      <Header />
 
       <SignedOut>
         <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4">
