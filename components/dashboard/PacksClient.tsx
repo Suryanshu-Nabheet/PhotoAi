@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { SelectModel } from "@/components/dashboard/Models";
+import { PersonSelector } from "@/components/dashboard/PersonSelector";
 import { PackCard, TPack } from "@/components/dashboard/PackCard";
 import { motion } from "framer-motion";
 import { Package, Search, Sparkles, Filter } from "lucide-react";
@@ -11,10 +11,10 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 export function PacksClient({ packs }: { packs: TPack[] }) {
-  const [selectedModelId, setSelectedModelId] = useState<string>();
+  const [selectedPersonId, setSelectedPersonId] = useState<string>();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredPacks = packs.filter(pack => 
+  const filteredPacks = packs.filter((pack) =>
     pack.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -22,7 +22,7 @@ export function PacksClient({ packs }: { packs: TPack[] }) {
     <div className="min-h-screen bg-gradient-to-b from-background to-background/50 mx-auto">
       <div className="container mx-auto md:px-8 pt-4">
         {/* Filters Section */}
-        <motion.div 
+        <motion.div
           className="rounded-lg mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -30,9 +30,9 @@ export function PacksClient({ packs }: { packs: TPack[] }) {
         >
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
-              <SelectModel
-                selectedModel={selectedModelId}
-                setSelectedModel={setSelectedModelId}
+              <PersonSelector
+                selectedPersonId={selectedPersonId}
+                onSelect={setSelectedPersonId}
               />
             </div>
           </div>
@@ -46,7 +46,7 @@ export function PacksClient({ packs }: { packs: TPack[] }) {
             Chose a pack to generate images with
           </p>
         </div>
-        <motion.div 
+        <motion.div
           className={cn(
             "grid gap-6 pt-4",
             "grid-cols-1",
@@ -61,9 +61,9 @@ export function PacksClient({ packs }: { packs: TPack[] }) {
             visible: {
               opacity: 1,
               transition: {
-                staggerChildren: 0.1
-              }
-            }
+                staggerChildren: 0.1,
+              },
+            },
           }}
         >
           {packs.length > 0 ? (
@@ -72,38 +72,36 @@ export function PacksClient({ packs }: { packs: TPack[] }) {
                 key={pack.id}
                 variants={{
                   hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0 }
+                  visible: { opacity: 1, y: 0 },
                 }}
                 className="group"
               >
-                <PackCard 
-                  {...pack} 
-                  selectedModelId={selectedModelId!}
-                />
+                <PackCard {...pack} selectedModelId={selectedPersonId!} />
               </motion.div>
             ))
           ) : (
-            <motion.div 
+            <motion.div
               className="col-span-full"
               variants={{
                 hidden: { opacity: 0 },
-                visible: { opacity: 1 }
+                visible: { opacity: 1 },
               }}
             >
               <div className="flex flex-col items-center justify-center p-12 rounded-lg border border-dashed bg-card/50">
                 <Package className="h-12 w-12 text-muted-foreground/50" />
                 <h3 className="mt-4 text-xl font-medium">
-                  {searchQuery ? "No matching packs found" : "No packs available"}
+                  {searchQuery
+                    ? "No matching packs found"
+                    : "No packs available"}
                 </h3>
                 <p className="mt-2 text-sm text-muted-foreground text-center max-w-md">
-                  {searchQuery 
+                  {searchQuery
                     ? "Try adjusting your search terms or clear the filter"
-                    : "Select a model above to view compatible packs"
-                  }
+                    : "Select a person above to view compatible packs"}
                 </p>
                 {searchQuery && (
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="mt-4"
                     onClick={() => setSearchQuery("")}
                   >

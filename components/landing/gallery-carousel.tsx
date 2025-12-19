@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Carousel, Card } from "@/components/landing/carousel";
+import { SectionHeader } from "./section-header";
 
 export default function GalleryCarousel() {
   const cards = data.map((card, index) => (
@@ -9,12 +10,15 @@ export default function GalleryCarousel() {
   ));
 
   return (
-    <div className="w-full h-full py-20">
-      <h2 className="max-w-7xl pl-4 mx-auto text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
-        AI-Generated Masterpieces
-      </h2>
+    <section className="w-full h-full py-24 border-t border-white/10">
+      <SectionHeader
+        badge="Gallery"
+        title="AI-Generated"
+        highlightedWord="Masterpieces"
+        subtitle="Explore what's possible with our advanced AI models. From portraits to art."
+      />
       <Carousel items={cards} />
-    </div>
+    </section>
   );
 }
 

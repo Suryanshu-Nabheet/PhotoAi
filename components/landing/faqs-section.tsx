@@ -4,44 +4,35 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { SectionHeader } from "./section-header";
 
 export default function FAQsSection() {
   return (
-    <div className="mx-auto min-h-screen w-full max-w-5xl lg:border-x">
-      <div className="mx-4 grid h-[calc(100vh-3.5rem)] grid-cols-1 border-x md:mx-0 md:grid-cols-2 md:border-x-0">
-        <div className="space-y-4 px-4 pt-12 pb-4 md:border-r">
-          <h2 className="font-black text-3xl md:text-4xl text-white">FAQs</h2>
-          <p className="text-gray-400">
-            Here are some common questions and answers about PhotoAI and our AI
-            image generation platform.
-          </p>
-        </div>
-        <div className="place-content-center">
-          <Accordion collapsible defaultValue="item-1" type="single">
-            {questions.map((item) => (
-              <AccordionItem
-                className="first:border-t last:border-b data-[state=open]:bg-card"
-                key={item.id}
-                value={item.id}
-              >
-                <AccordionTrigger className="px-4 py-4 text-[15px] leading-6 hover:no-underline text-white">
-                  {item.title}
-                </AccordionTrigger>
-                <AccordionContent className="px-4 pb-4 text-gray-400">
-                  {item.content}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-      </div>
-      <div className="flex h-14 items-center justify-center border-t">
-        <p className="text-gray-400">
-          Can't find what you're looking for?{" "}
-          <a className="text-primary hover:underline" href="#contact">
-            Contact Us
-          </a>
-        </p>
+    <div className="py-24 border-t border-white/10">
+      <SectionHeader
+        badge="Support"
+        title="Commonly Asked"
+        highlightedWord="Questions"
+        subtitle="Here are some common questions and answers about PhotoAI and our AI image generation platform."
+      />
+
+      <div className="mx-auto w-full max-w-3xl px-4">
+        <Accordion collapsible defaultValue="item-1" type="single">
+          {questions.map((item) => (
+            <AccordionItem
+              className="border-white/10 data-[state=open]:bg-white/5"
+              key={item.id}
+              value={item.id}
+            >
+              <AccordionTrigger className="px-4 py-4 text-[15px] leading-6 hover:no-underline text-white">
+                {item.title}
+              </AccordionTrigger>
+              <AccordionContent className="px-4 pb-4 text-gray-400">
+                {item.content}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </div>
     </div>
   );

@@ -1,76 +1,182 @@
-import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
-import Link from "next/link";
+import { cn } from "@/lib/utils";
+import type React from "react";
 
-interface PricingCardProps {
-  name: string;
-  price: string;
-  period?: string;
-  description: string;
-  features: string[];
-  highlighted?: boolean;
-  buttonText: string;
-  buttonLink: string;
-}
-
-export function PricingCard({
-  name,
-  price,
-  period,
-  description,
-  features,
-  highlighted = false,
-  buttonText,
-  buttonLink,
-}: PricingCardProps) {
+function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={`relative rounded-2xl p-8 ${
-        highlighted
-          ? "bg-gradient-to-br from-blue-600/10 to-indigo-600/10 border-2 border-blue-500/50"
-          : "bg-white/5 border border-white/10"
-      }`}
-    >
-      {highlighted && (
-        <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-          <span className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
-            Most Popular
-          </span>
-        </div>
+      className={cn(
+        "relative w-full max-w-xs rounded-xl border bg-card dark:bg-transparent",
+        "p-1.5 shadow-xs backdrop-blur-xl",
+        className
       )}
+      {...props}
+    />
+  );
+}
 
-      <div className="mb-6">
-        <h3 className="text-2xl font-bold text-white mb-2">{name}</h3>
-        <p className="text-gray-400 text-sm">{description}</p>
-      </div>
-
-      <div className="mb-6">
-        <div className="flex items-baseline">
-          <span className="text-5xl font-bold text-white">{price}</span>
-          {period && <span className="text-gray-400 ml-2">{period}</span>}
-        </div>
-      </div>
-
-      <Link href={buttonLink}>
-        <Button
-          className={`w-full mb-6 ${
-            highlighted
-              ? "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500"
-              : "bg-white/10 hover:bg-white/20"
-          }`}
-        >
-          {buttonText}
-        </Button>
-      </Link>
-
-      <ul className="space-y-3">
-        {features.map((feature, index) => (
-          <li key={index} className="flex items-start gap-3">
-            <Check className="h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5" />
-            <span className="text-gray-300 text-sm">{feature}</span>
-          </li>
-        ))}
-      </ul>
+function Header({
+  className,
+  children,
+  glassEffect = true,
+  ...props
+}: React.ComponentProps<"div"> & {
+  glassEffect?: boolean;
+}) {
+  return (
+    <div
+      className={cn(
+        "relative mb-4 rounded-xl border bg-muted/50 p-4 shadow-sm",
+        className
+      )}
+      {...props}
+    >
+      {/* Top glass gradient */}
+      {glassEffect && (
+        <div
+          aria-hidden="true"
+          className="-z-10 absolute inset-x-0 top-0 h-48 rounded-[inherit]"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 40%, rgba(0,0,0,0) 100%)",
+          }}
+        />
+      )}
+      {children}
     </div>
   );
 }
+
+function Plan({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      className={cn("mb-8 flex items-center justify-between", className)}
+      {...props}
+    />
+  );
+}
+
+function Description({ className, ...props }: React.ComponentProps<"p">) {
+  return (
+    <p className={cn("text-muted-foreground text-xs", className)} {...props} />
+  );
+}
+
+function PlanName({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      className={cn(
+        "flex items-center gap-2 font-medium text-muted-foreground text-sm [&_svg:not([class*='size-'])]:size-4",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+function Badge({ className, ...props }: React.ComponentProps<"span">) {
+  return (
+    <span
+      className={cn(
+        "rounded-full border border-foreground/20 px-2 py-0.5 text-foreground/80 text-xs",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+function Price({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div className={cn("mb-3 flex items-end gap-1", className)} {...props} />
+  );
+}
+
+function MainPrice({ className, ...props }: React.ComponentProps<"span">) {
+  return (
+    <span
+      className={cn("font-extrabold text-3xl tracking-tight", className)}
+      {...props}
+    />
+  );
+}
+
+function Period({ className, ...props }: React.ComponentProps<"span">) {
+  return (
+    <span
+      className={cn("pb-1 text-foreground/80 text-sm", className)}
+      {...props}
+    />
+  );
+}
+
+function OriginalPrice({ className, ...props }: React.ComponentProps<"span">) {
+  return (
+    <span
+      className={cn(
+        "mr-1 ml-auto text-lg text-muted-foreground line-through",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+function Body({ className, ...props }: React.ComponentProps<"div">) {
+  return <div className={cn("space-y-6 p-3", className)} {...props} />;
+}
+
+function List({ className, ...props }: React.ComponentProps<"ul">) {
+  return <ul className={cn("space-y-3", className)} {...props} />;
+}
+
+function ListItem({ className, ...props }: React.ComponentProps<"li">) {
+  return (
+    <li
+      className={cn(
+        "flex items-start gap-3 text-muted-foreground text-sm",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+function Separator({
+  children = "Upgrade to access",
+  className,
+  ...props
+}: React.ComponentProps<"div"> & {
+  children?: string;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex items-center gap-3 text-muted-foreground text-sm",
+        className
+      )}
+      {...props}
+    >
+      <span className="h-[1px] flex-1 bg-muted-foreground/40" />
+      <span className="shrink-0 text-muted-foreground">{children}</span>
+      <span className="h-[1px] flex-1 bg-muted-foreground/40" />
+    </div>
+  );
+}
+
+export {
+  Card,
+  Header,
+  Description,
+  Plan,
+  PlanName,
+  Badge,
+  Price,
+  MainPrice,
+  Period,
+  OriginalPrice,
+  Body,
+  List,
+  ListItem,
+  Separator,
+};

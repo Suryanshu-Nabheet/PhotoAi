@@ -1,7 +1,12 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { getProvider } from "@/lib/ai";
-import { GenerateImage } from "@/lib/types";
+import { z } from "zod";
+
+const GeneratePackSchema = z.object({
+  packId: z.string(),
+  modelId: z.string(),
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,7 +17,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const parsedBody = GenerateImage.safeParse(body);
+    const parsedBody = GeneratePackSchema.safeParse(body);
 
     if (!parsedBody.success) {
       return NextResponse.json(
@@ -21,23 +26,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Use the provider abstraction
+    // For now, treat pack generation as a single image generation or a batch
+    // Since we don't have specific "pack" logic in provider yet, just generate 1 image
+    // In future, this would queue multiple jobs or a specific "pack" job type
+
     const { requestId } = await getProvider().generateImage({
-      prompt: parsedBody.data.prompt,
+      prompt: `Generate pack ${parsedBody.data.packId}`, // Placeholder prompt logic
       modelId: parsedBody.data.modelId,
-      num: 1, // Default to 1 for now
+      num: 4, // Packs usually have multiple images
     });
 
     return NextResponse.json({
       success: true,
       requestId: requestId,
-      message: "Image generation queued",
+      message: "Pack generation queued",
     });
   } catch (error) {
-    console.error("Error in /api/ai/generate:", error);
+    console.error("Error in /api/pack/generate:", error);
     return NextResponse.json(
       {
-        message: "Image generation failed",
+        message: "Pack generation failed",
         error: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }

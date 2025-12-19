@@ -1,78 +1,134 @@
-import { PricingCard } from "./pricing-card";
+"use client";
+
+import * as PricingCard from "./pricing-card";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { Briefcase, Building, CheckCircle2, Users } from "lucide-react";
+import { SectionHeader } from "./section-header";
 
 export default function PricingSection() {
-  return (
-    <section className="py-20 px-4">
-      <div className="mx-auto max-w-7xl">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Simple, Transparent Pricing
-          </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Choose the perfect plan for your AI image generation needs
-          </p>
-        </div>
+  const plans = [
+    {
+      icon: <Users />,
+      description: "Perfect for individuals",
+      name: "Basic",
+      price: "Free",
+      variant: "outline",
+      features: [
+        "Automated Meeting Scheduling",
+        "Basic Calendar Sync",
+        "Daily Schedule Overview",
+        "Email Reminders",
+        "Task Management",
+        "24/7 Customer Support",
+        "Single User Access",
+        "Basic Reporting",
+        "Mobile App Access",
+      ],
+    },
+    {
+      icon: <Briefcase />,
+      description: "Ideal for small teams",
+      name: "Pro",
+      badge: "Popular",
+      price: "$29",
+      original: "$39",
+      period: "/month",
+      variant: "default",
+      features: [
+        "All Basic Plan Features",
+        "Advanced Calendar Integrations",
+        "Customizable Notifications",
+        "Priority Support",
+        "Analytics and Insights",
+        "Group Scheduling",
+        "Multiple User Roles",
+        "Advanced Reporting",
+        "Custom Branding Options",
+      ],
+    },
+    {
+      icon: <Building />,
+      name: "Enterprise",
+      description: "Perfect for large scale companies",
+      price: "$99",
+      original: "$129",
+      period: "/month",
+      variant: "outline",
+      features: [
+        "All Pro Plan Features",
+        "Dedicated Account Manager",
+        "Custom Integrations",
+        "Advanced Security Features",
+        "Team Collaboration Tools",
+        "Onboarding and Training",
+        "Unlimited Users",
+        "API Access with Higher Limits",
+        "Advanced Audit Logs",
+      ],
+    },
+  ];
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {plans.map((plan, index) => (
-            <PricingCard key={index} {...plan} />
-          ))}
-        </div>
+  return (
+    <section className="py-24 border-t border-white/10">
+      <SectionHeader
+        badge="Simple Pricing"
+        title="Plans for Every"
+        highlightedWord="Need"
+        subtitle="Choose the perfect plan for your AI image generation journey. Upgrade anytime as your needs grow."
+      />
+      <div className="mx-auto grid w-full max-w-4xl gap-4 p-6 md:grid-cols-3">
+        {plans.map((plan, index) => (
+          <PricingCard.Card
+            className={cn("w-full max-w-full", index === 1 && "md:scale-105")}
+            key={plan.name}
+          >
+            <PricingCard.Header>
+              <PricingCard.Plan>
+                <PricingCard.PlanName>
+                  {plan.icon}
+                  <span className="text-muted-foreground">{plan.name}</span>
+                </PricingCard.PlanName>
+                {plan.badge && (
+                  <PricingCard.Badge>{plan.badge}</PricingCard.Badge>
+                )}
+              </PricingCard.Plan>
+              <PricingCard.Price>
+                <PricingCard.MainPrice>{plan.price}</PricingCard.MainPrice>
+                <PricingCard.Period>{plan.period}</PricingCard.Period>
+                {plan.original && (
+                  <PricingCard.OriginalPrice className="ml-auto">
+                    {plan.original}
+                  </PricingCard.OriginalPrice>
+                )}
+              </PricingCard.Price>
+              <Button
+                className={cn("w-full font-semibold")}
+                variant={plan.variant as "outline" | "default"}
+              >
+                Get Started
+              </Button>
+            </PricingCard.Header>
+
+            <PricingCard.Body>
+              <PricingCard.Description>
+                {plan.description}
+              </PricingCard.Description>
+              <PricingCard.List>
+                {plan.features.map((item) => (
+                  <PricingCard.ListItem className="text-xs" key={item}>
+                    <CheckCircle2
+                      aria-hidden="true"
+                      className="h-4 w-4 text-foreground"
+                    />
+                    <span>{item}</span>
+                  </PricingCard.ListItem>
+                ))}
+              </PricingCard.List>
+            </PricingCard.Body>
+          </PricingCard.Card>
+        ))}
       </div>
     </section>
   );
 }
-
-const plans = [
-  {
-    name: "Starter",
-    price: "Free",
-    description: "Perfect for trying out PhotoAI",
-    features: [
-      "10 AI Images per month",
-      "Basic AI models",
-      "Standard quality",
-      "Community support",
-      "Basic export options",
-    ],
-    highlighted: false,
-    buttonText: "Get Started",
-    buttonLink: "/dashboard",
-  },
-  {
-    name: "Pro",
-    price: "$19",
-    period: "/month",
-    description: "For professionals and creators",
-    features: [
-      "500 AI Images per month",
-      "All premium AI models",
-      "HD & 4K quality",
-      "Priority support",
-      "Advanced editing tools",
-      "Commercial license",
-      "API access",
-    ],
-    highlighted: true,
-    buttonText: "Start Free Trial",
-    buttonLink: "/dashboard",
-  },
-  {
-    name: "Enterprise",
-    price: "Custom",
-    description: "For teams and businesses",
-    features: [
-      "Unlimited AI Images",
-      "Custom AI models",
-      "8K quality",
-      "Dedicated support",
-      "Team collaboration",
-      "Custom integrations",
-      "SLA guarantee",
-      "White-label options",
-    ],
-    highlighted: false,
-    buttonText: "Contact Sales",
-    buttonLink: "#contact",
-  },
-];

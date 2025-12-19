@@ -6,21 +6,25 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
 import { BACKEND_URL } from "@/app/config";
-import { SelectModel } from "@/components/dashboard/Models";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import CustomLabel from "@/components/ui/customLabel";
 import { GlowEffect } from "@/components/dashboard/GlowEffect";
+import { PersonSelector } from "@/components/dashboard/PersonSelector";
+// ... imports
+
+// Note: I need to update the entire component to swap 'selectedModel' with 'selectedPersonId'
+// and remove the 'Models' import.
 
 export function GenerateImage() {
   const [prompt, setPrompt] = useState("");
-  const [selectedModel, setSelectedModel] = useState<string>();
+  const [selectedPersonId, setSelectedPersonId] = useState<string>();
   const [isGenerating, setIsGenerating] = useState(false);
   const { getToken } = useAuth();
 
   const handleGenerate = async () => {
-    if (!prompt || !selectedModel) return;
+    if (!prompt || !selectedPersonId) return;
 
     setIsGenerating(true);
     try {
@@ -29,7 +33,7 @@ export function GenerateImage() {
         `${BACKEND_URL}/ai/generate`,
         {
           prompt,
-          modelId: selectedModel,
+          modelId: selectedPersonId, // Map personId to modelId for backend
           num: 1,
         },
         {
@@ -53,9 +57,9 @@ export function GenerateImage() {
       transition={{ duration: 0.5 }}
     >
       <div className="space-y-4">
-        <SelectModel
-          selectedModel={selectedModel}
-          setSelectedModel={setSelectedModel}
+        <PersonSelector
+          selectedPersonId={selectedPersonId}
+          onSelect={setSelectedPersonId}
         />
 
         <motion.div
@@ -75,13 +79,13 @@ export function GenerateImage() {
           <div className="relative">
             <Button
               onClick={handleGenerate}
-              disabled={isGenerating || !prompt || !selectedModel}
+              disabled={isGenerating || !prompt || !selectedPersonId}
               variant={"outline"}
               className="relative z-20 cursor-pointer"
             >
               Generate Image <Sparkles size={24} />
             </Button>
-            {prompt && selectedModel && (
+            {prompt && selectedPersonId && (
               <GlowEffect
                 colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
                 mode="colorShift"

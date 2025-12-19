@@ -20,7 +20,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "v3.fal.media",
+        hostname: "placehold.co",
       },
       {
         protocol: "https",

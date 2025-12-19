@@ -8,6 +8,8 @@ import { LandingHeader } from "@/components/landing/header";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 
+import Train from "@/components/dashboard/TrainModel";
+
 export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-black">
@@ -36,10 +38,11 @@ export default function DashboardPage() {
         <div className="max-w-6xl mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold mb-8 text-white">Dashboard</h1>
           <Tabs defaultValue="camera" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 bg-gray-900">
+            <TabsList className="grid w-full grid-cols-4 bg-gray-900">
               <TabsTrigger value="camera">Camera</TabsTrigger>
               <TabsTrigger value="generate">Generate</TabsTrigger>
               <TabsTrigger value="packs">Packs</TabsTrigger>
+              <TabsTrigger value="train">Train</TabsTrigger>
             </TabsList>
 
             <TabsContent value="camera" className="mt-6">
@@ -52,6 +55,10 @@ export default function DashboardPage() {
 
             <TabsContent value="packs" className="mt-6">
               <Packs />
+            </TabsContent>
+
+            <TabsContent value="train" className="mt-6">
+              <Train />
             </TabsContent>
           </Tabs>
         </div>

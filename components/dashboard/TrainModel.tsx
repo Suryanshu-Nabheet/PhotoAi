@@ -1,0 +1,208 @@
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { UploadModal } from "@/components/ui/upload";
+import axios from "axios";
+import { BACKEND_URL } from "@/app/config";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
+import toast from "react-hot-toast";
+import { motion } from "framer-motion";
+
+export default function Train() {
+  const { getToken } = useAuth();
+  const [zipUrl, setZipUrl] = useState("");
+  const [type, setType] = useState("Man");
+  const [age, setAge] = useState<string>();
+  const [ethinicity, setEthinicity] = useState<string>();
+  const [eyeColor, setEyeColor] = useState<string>();
+  const [bald, setBald] = useState(false);
+  const [name, setName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
+
+  async function trainModel() {
+    if (!name || !zipUrl || !type || !age || !ethinicity || !eyeColor) {
+      toast.error("Please fill all fields");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const input = {
+        zipUrl,
+        type,
+        age: parseInt(age),
+        ethinicity,
+        eyeColor,
+        bald,
+        name,
+      };
+
+      const token = await getToken();
+      await axios.post(`${BACKEND_URL}/ai/training`, input, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success("Training started successfully!");
+      router.push("/");
+    } catch (error) {
+      console.error("Training error:", error);
+      toast.error("Failed to start training");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="w-full max-w-2xl mx-auto"
+    >
+      <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
+        <CardHeader>
+          <CardTitle className="text-2xl">Train Custom Model</CardTitle>
+          <CardDescription>
+            Create a personalized AI model by uploading photos and specifying
+            attributes.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="name">Model Name</Label>
+            <Input
+              id="name"
+              placeholder="e.g. My Professional Avatar"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="type">Type</Label>
+              <Select value={type} onValueChange={setType}>
+                <SelectTrigger id="type">
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Man">Man</SelectItem>
+                  <SelectItem value="Woman">Woman</SelectItem>
+                  <SelectItem value="Others">Others</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="age">Age</Label>
+              <Input
+                id="age"
+                type="number"
+                placeholder="Subject age"
+                value={age || ""}
+                onChange={(e) => setAge(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="ethnicity">Ethnicity</Label>
+              <Select value={ethinicity} onValueChange={setEthinicity}>
+                <SelectTrigger id="ethnicity">
+                  <SelectValue placeholder="Select ethnicity" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="White">White</SelectItem>
+                  <SelectItem value="Black">Black</SelectItem>
+                  <SelectItem value="Asian_American">Asian American</SelectItem>
+                  <SelectItem value="East_Asian">East Asian</SelectItem>
+                  <SelectItem value="South_East_Asian">
+                    South East Asian
+                  </SelectItem>
+                  <SelectItem value="South_Asian">South Asian</SelectItem>
+                  <SelectItem value="Middle_Eastern">Middle Eastern</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="eyeColor">Eye Color</Label>
+              <Select value={eyeColor} onValueChange={setEyeColor}>
+                <SelectTrigger id="eyeColor">
+                  <SelectValue placeholder="Select eye color" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Brown">Brown</SelectItem>
+                  <SelectItem value="Blue">Blue</SelectItem>
+                  <SelectItem value="Hazel">Hazel</SelectItem>
+                  <SelectItem value="Gray">Gray</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between p-4 border rounded-lg bg-muted/50">
+            <Label htmlFor="bald" className="cursor-pointer">
+              Bald / Shaved Head
+            </Label>
+            <Switch id="bald" checked={bald} onCheckedChange={setBald} />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Training Images</Label>
+            <UploadModal
+              handleUpload={(files) => {
+                // Mocking zip URL creation for now
+                setZipUrl(files[0]?.name ?? "images.zip");
+                toast.success("Images uploaded (mock)");
+              }}
+              uploadProgress={0}
+              isUploading={false}
+            />
+          </div>
+        </CardContent>
+        <CardFooter className="flex justify-between border-t pt-6">
+          <Button variant="ghost" onClick={() => router.push("/")}>
+            Cancel
+          </Button>
+          <Button
+            onClick={trainModel}
+            disabled={
+              isSubmitting ||
+              !name ||
+              !zipUrl ||
+              !type ||
+              !age ||
+              !ethinicity ||
+              !eyeColor
+            }
+            className="min-w-[140px]"
+          >
+            {isSubmitting ? "Queuing..." : "Start Training"}
+          </Button>
+        </CardFooter>
+      </Card>
+    </motion.div>
+  );
+}

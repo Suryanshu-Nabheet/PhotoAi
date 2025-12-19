@@ -1,8 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
-import { FalAIModel } from "@/lib/server/fal-ai";
-
-const falAiModel = new FalAIModel();
+import { getProvider } from "@/lib/ai";
 
 export async function GET(
   request: NextRequest,
@@ -16,7 +14,7 @@ export async function GET(
     }
 
     const { requestId } = await params;
-    const status = await falAiModel.getStatus(requestId);
+    const status = await getProvider().getStatus(requestId);
 
     return NextResponse.json({
       success: true,
