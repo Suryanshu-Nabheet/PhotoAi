@@ -17,9 +17,15 @@ import { PersonSelector } from "@/components/dashboard/PersonSelector";
 // Note: I need to update the entire component to swap 'selectedModel' with 'selectedPersonId'
 // and remove the 'Models' import.
 
+import { useDashboard } from "./DashboardContext";
+
 export function GenerateImage() {
+  const { selectedPersonId, setSelectedPersonId } = useDashboard();
   const [generatedImages, setGeneratedImages] = useState<string[]>([]);
   const [requestId, setRequestId] = useState<string>();
+  const [prompt, setPrompt] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const { getToken } = useAuth();
 
   const handleGenerate = async () => {
     if (!prompt || !selectedPersonId) return;
