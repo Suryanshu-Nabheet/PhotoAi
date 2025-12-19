@@ -27,9 +27,12 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
+import { useDashboard } from "./DashboardContext";
 
 export default function Train() {
   const { getToken } = useAuth();
+  const { addPerson } = useDashboard();
+
   const [zipUrl, setZipUrl] = useState("");
   const [type, setType] = useState("Man");
   const [age, setAge] = useState<string>();
@@ -59,13 +62,26 @@ export default function Train() {
       };
 
       const token = await getToken();
-      await axios.post(`${BACKEND_URL}/ai/training`, input, {
+      const response = await axios.post(`${BACKEND_URL}/ai/training`, input, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      // Add to local context
+      addPerson({
+        id: response.data.requestId || `temp-${Date.now()}`,
+        name: name,
+        thumbnail: `https://placehold.co/600x600/png?text=${encodeURIComponent(
+          name
+        )}`,
+      });
+
       toast.success("Training started successfully!");
-      router.push("/");
+      // We don't navigate away, just reset form or let user switch tabs
+      setName("");
+      setAge("");
+      setZipUrl("");
     } catch (error) {
       console.error("Training error:", error);
       toast.error("Failed to start training");

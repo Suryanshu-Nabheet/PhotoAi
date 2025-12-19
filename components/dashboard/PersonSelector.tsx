@@ -1,31 +1,16 @@
 "use client";
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { User } from "lucide-react";
+import { useDashboard } from "./DashboardContext";
 
 export interface TPerson {
   id: string;
   name: string;
   thumbnail: string;
 }
-
-// Mock data for people (trained models)
-// In a real app, this would come from an API endpoint listing user's trained LoRAs
-const DEFAULT_PERSONS: TPerson[] = [
-  {
-    id: "person-1", // This would be the modelId/LoRA path in reality
-    name: "Me (Trained Model)",
-    thumbnail: "https://placehold.co/600x600/png?text=Me",
-  },
-  {
-    id: "person-2",
-    name: "Model 2",
-    thumbnail: "https://placehold.co/600x600/png?text=Model+2",
-  },
-];
 
 export function PersonSelector({
   selectedPersonId,
@@ -34,35 +19,7 @@ export function PersonSelector({
   selectedPersonId?: string;
   onSelect: (id: string) => void;
 }) {
-  const [persons, setPersons] = useState<TPerson[]>([]);
-
-  useEffect(() => {
-    const fetchPersons = async () => {
-      try {
-        const res = await fetch("/api/ai/persons");
-        if (res.ok) {
-          const data = await res.json();
-          // If we have trained models, use them. Otherwise show default/mock.
-          if (Array.isArray(data) && data.length > 0) {
-            setPersons(data);
-            if (!selectedPersonId) {
-              onSelect(data[0].id);
-            }
-          } else {
-            setPersons(DEFAULT_PERSONS);
-            if (!selectedPersonId) {
-              onSelect(DEFAULT_PERSONS[0].id);
-            }
-          }
-        }
-      } catch (e) {
-        console.error("Failed to fetch persons", e);
-        setPersons(DEFAULT_PERSONS);
-      }
-    };
-
-    fetchPersons();
-  }, [selectedPersonId, onSelect]);
+  const { persons } = useDashboard();
 
   const container = {
     hidden: { opacity: 0 },

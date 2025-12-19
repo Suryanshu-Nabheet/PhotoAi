@@ -1,7 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { getProvider } from "@/lib/ai";
-import { db } from "@/lib/storage";
 import { z } from "zod";
 
 const TrainModelSchema = z.object({
@@ -32,14 +31,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Adapt to provider params
-    // Our current provider interface might need updating or we just pass a stringified config for now
-    // For "End-to-end" w/ mock provider, we just queue the job.
-
-    // We'll update the provider call to just pass the name and "images" (using zipUrl as a placeholder)
-    // and maybe other params if we extend the backend interface.
-    // For now, let's just make it compilable.
-
     const { requestId } = await getProvider().trainModel({
       name: parsedBody.data.name,
       type: parsedBody.data.type,
@@ -48,18 +39,6 @@ export async function POST(request: NextRequest) {
       eyeColor: parsedBody.data.eyeColor,
       bald: parsedBody.data.bald,
       zipUrl: parsedBody.data.zipUrl,
-    });
-
-    // Save to local DB
-    await db.persons.add({
-      id: parsedBody.data.name.toLowerCase().replace(/\s+/g, "-"),
-      name: parsedBody.data.name,
-      type: parsedBody.data.type,
-      thumbnail: `https://placehold.co/600x600/png?text=${encodeURIComponent(
-        parsedBody.data.name
-      )}`,
-      createdAt: Date.now(),
-      modelId: requestId,
     });
 
     return NextResponse.json({
