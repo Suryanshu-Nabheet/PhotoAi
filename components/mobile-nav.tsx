@@ -5,7 +5,7 @@ import { MenuIcon, XIcon } from "lucide-react";
 import React from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, SignInButton, SignUpButton } from "@clerk/nextjs";
 
 export function MobileNav() {
   const [open, setOpen] = React.useState(false);
@@ -98,21 +98,20 @@ export function MobileNav() {
                   </Button>
                 ) : (
                   <>
-                    <Button
-                      className="w-full"
-                      variant="outline"
-                      asChild
-                      onClick={() => setOpen(false)}
-                    >
-                      <Link href="/sign-in">Sign In</Link>
-                    </Button>
-                    <Button
-                      className="w-full"
-                      asChild
-                      onClick={() => setOpen(false)}
-                    >
-                      <Link href="/dashboard">Get Started</Link>
-                    </Button>
+                    <SignInButton mode="modal">
+                      <Button
+                        className="w-full"
+                        variant="outline"
+                        onClick={() => setOpen(false)}
+                      >
+                        Sign In
+                      </Button>
+                    </SignInButton>
+                    <SignUpButton mode="modal">
+                      <Button className="w-full" onClick={() => setOpen(false)}>
+                        Get Started
+                      </Button>
+                    </SignUpButton>
                   </>
                 )}
               </div>

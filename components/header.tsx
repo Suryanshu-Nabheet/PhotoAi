@@ -1,6 +1,6 @@
 "use client";
 import { useScroll } from "@/hooks/use-scroll";
-import { useAuth, UserButton } from "@clerk/nextjs";
+import { useAuth, UserButton, SignInButton, SignUpButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -39,16 +39,16 @@ export function Header() {
                   <Button variant="ghost" asChild>
                     <Link href="/dashboard">Dashboard</Link>
                   </Button>
-                  <UserButton afterSignOutUrl="/" />
+                  <UserButton afterSignOutUrl="/dashboard" />
                 </>
               ) : (
                 <>
-                  <Button variant="ghost" asChild>
-                    <Link href="/sign-in">Sign In</Link>
-                  </Button>
-                  <Button asChild>
-                    <Link href="/dashboard">Get Started</Link>
-                  </Button>
+                  <SignInButton mode="modal">
+                    <Button variant="ghost">Sign In</Button>
+                  </SignInButton>
+                  <SignUpButton mode="modal">
+                    <Button>Get Started</Button>
+                  </SignUpButton>
                 </>
               )
             ) : (
