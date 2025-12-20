@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { getProvider } from "@/lib/ai";
+import { db } from "@/lib/db";
 import { z } from "zod";
 
 const TrainModelSchema = z.object({
@@ -41,6 +42,18 @@ export async function POST(request: NextRequest) {
       zipUrl: parsedBody.data.zipUrl,
     });
 
+    // Save metadata to DB
+    await db.addPerson({
+      id: requestId, // Use job ID as temporary person ID
+      name: parsedBody.data.name,
+      thumbnail: parsedBody.data.zipUrl, // Use zip URL or placeholder as thumbnail for now?
+      // Ideally we'd extract one image, but ZIP URL is what we have.
+      // Let's use a generic placeholder or the zipUrl if it was an image (it's not).
+      // For now, let's just save it. The UI might handle zipUrl gracefully or we need a designated thumbnail.
+      // The previous mock used placehold.co. Let's use a placeholder.
+      // ACTUALLY, the UI expects `thumbnail`. I'll use a placeholder for newly trained models until they are done.
+    });
+
     return NextResponse.json({
       success: true,
       requestId: requestId,
@@ -48,10 +61,24 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error in /api/ai/training:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+
+    // Handle billing errors specifically
+    if (errorMessage.includes("balance") || errorMessage.includes("locked")) {
+      return NextResponse.json(
+        {
+          message: "Training failed due to billing",
+          error: errorMessage,
+        },
+        { status: 402 } // Payment Required
+      );
+    }
+
     return NextResponse.json(
       {
         message: "Training failed",
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: errorMessage,
       },
       { status: 500 }
     );

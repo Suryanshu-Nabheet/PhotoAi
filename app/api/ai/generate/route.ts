@@ -35,10 +35,24 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error in /api/ai/generate:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+
+    // Handle billing errors specifically
+    if (errorMessage.includes("balance") || errorMessage.includes("locked")) {
+      return NextResponse.json(
+        {
+          message: "Generation failed due to billing",
+          error: errorMessage,
+        },
+        { status: 402 } // Payment Required
+      );
+    }
+
     return NextResponse.json(
       {
         message: "Image generation failed",
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: errorMessage,
       },
       { status: 500 }
     );

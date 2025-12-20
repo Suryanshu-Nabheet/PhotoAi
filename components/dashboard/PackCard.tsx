@@ -1,15 +1,23 @@
 "use client";
 
-import { BACKEND_URL } from "@/app/config";
 import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ImageIcon } from "lucide-react";
-import { Tooltip, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   Carousel,
   CarouselContent,
@@ -58,7 +66,7 @@ export function PackCard(props: TPack & { selectedModelId: string }) {
   const generatePack = async () => {
     const token = await getToken();
     await axios.post(
-      `${BACKEND_URL}/pack/generate`,
+      "/api/pack/generate",
       {
         packId: props.id,
         modelId: props.selectedModelId,

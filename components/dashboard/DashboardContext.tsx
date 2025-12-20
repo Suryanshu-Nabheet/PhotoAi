@@ -15,29 +15,36 @@ const DashboardContext = createContext<DashboardContextType | undefined>(
   undefined
 );
 
-// Default mock data to start with (so the UI isn't empty)
-const DEFAULT_PERSONS: TPerson[] = [
-  {
-    id: "person-1",
-    name: "Me (Trained Model)",
-    thumbnail: "https://placehold.co/600x600/png?text=Me",
-  },
-  {
-    id: "person-2",
-    name: "Model 2",
-    thumbnail: "https://placehold.co/600x600/png?text=Model+2",
-  },
-];
+// Removed DEFAULT_PERSONS
 
 export function DashboardProvider({ children }: { children: ReactNode }) {
-  const [persons, setPersons] = useState<TPerson[]>(DEFAULT_PERSONS);
+  const [persons, setPersons] = useState<TPerson[]>([]);
   const [selectedPersonId, setSelectedPersonId] = useState<string | undefined>(
-    DEFAULT_PERSONS[0]?.id
+    undefined
   );
 
+  // Fetch persons on mount
+  React.useEffect(() => {
+    const fetchPersons = async () => {
+      try {
+        const res = await fetch("/api/ai/persons");
+        if (res.ok) {
+          const data = await res.json();
+          setPersons(data.persons);
+          if (data.persons.length > 0) {
+            setSelectedPersonId(data.persons[0].id);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch persons:", error);
+      }
+    };
+    fetchPersons();
+  }, []);
+
   const addPerson = (person: TPerson) => {
-    setPersons((prev) => [person, ...prev]); // Add new person to the start
-    setSelectedPersonId(person.id); // Auto-select the new person
+    setPersons((prev) => [person, ...prev]);
+    setSelectedPersonId(person.id);
   };
 
   return (

@@ -22,7 +22,6 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { UploadModal } from "@/components/ui/upload";
 import axios from "axios";
-import { BACKEND_URL } from "@/app/config";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import toast from "react-hot-toast";
@@ -62,7 +61,7 @@ export default function Train() {
       };
 
       const token = await getToken();
-      const response = await axios.post(`${BACKEND_URL}/ai/training`, input, {
+      const response = await axios.post("/api/ai/training", input, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -82,9 +81,20 @@ export default function Train() {
       setName("");
       setAge("");
       setZipUrl("");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Training error:", error);
-      toast.error("Failed to start training");
+
+      if (error.response?.status === 402) {
+        toast.error("Training failed: Insufficient credits or billing error");
+        setIsSubmitting(false);
+        return;
+      }
+
+      const errorMessage =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        "Failed to start training";
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -209,8 +219,12 @@ export default function Train() {
                   const formData = new FormData();
                   formData.append("file", zipBlob, "images.zip");
 
+                  const token = await getToken();
                   const response = await axios.post("/api/upload", formData, {
-                    headers: { "Content-Type": "multipart/form-data" },
+                    headers: {
+                      "Content-Type": "multipart/form-data",
+                      Authorization: `Bearer ${token}`,
+                    },
                   });
 
                   setZipUrl(response.data.url);

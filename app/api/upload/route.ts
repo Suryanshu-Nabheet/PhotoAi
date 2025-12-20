@@ -1,12 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import axios from "axios";
-
-// This route handles uploading a file to Fal.ai storage (or proxying it)
-// Fal Storage Flow:
-// 1. Initiate upload -> get upload_url
-// 2. PUT file to upload_url
-// 3. Return file_url
+import { fal } from "@fal-ai/client";
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,48 +19,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const FAL_KEY = process.env.FAL_KEY;
-    if (!FAL_KEY) throw new Error("Missing FAL_KEY");
+    if (!process.env.FAL_KEY) {
+      throw new Error("Missing FAL_KEY");
+    }
 
-    // 1. Initiate Upload
-    // Using standard Fal REST pattern if available, or just mocking if Fal SDK is preferred
-    // But since "remove all local llm", we assume we rely on Fal.
-    // Fal Storage initiation endpoint for REST:
-    // POST https://fal.run/storage/upload/initiate
-
-    const initiateRes = await axios.post(
-      "https://fal.run/storage/upload/initiate",
-      {
-        content_type: file.type || "application/zip",
-        file_name: file.name,
-      },
-      {
-        headers: {
-          Authorization: `Key ${FAL_KEY}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    const { upload_url, file_url } = initiateRes.data;
-
-    // 2. Upload File (PUT to upload_url)
-    // We need to convert File to Buffer or Stream
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
-    await axios.put(upload_url, buffer, {
-      headers: {
-        "Content-Type": file.type || "application/zip",
-      },
+    // Configure fal with server-side credentials
+    console.log("FAL_KEY Status:", {
+      exists: !!process.env.FAL_KEY,
+      length: process.env.FAL_KEY?.length,
+      prefix: process.env.FAL_KEY?.substring(0, 4),
     });
 
-    return NextResponse.json({ url: file_url });
+    fal.config({
+      credentials: process.env.FAL_KEY,
+    });
+
+    const url = await fal.storage.upload(file);
+
+    return NextResponse.json({ url });
   } catch (error: any) {
-    console.error("Upload error:", error.response?.data || error);
+    console.error("Upload error:", error);
+    const status = error.status || 500;
     return NextResponse.json(
-      { message: "Upload failed", error: error.message },
-      { status: 500 }
+      { message: "Upload failed", error: error.message || error },
+      { status }
     );
   }
 }

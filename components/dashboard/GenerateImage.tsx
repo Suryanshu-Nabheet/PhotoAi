@@ -5,7 +5,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
-import { BACKEND_URL } from "@/app/config";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
@@ -37,7 +36,7 @@ export function GenerateImage() {
     try {
       const token = await getToken();
       const response = await axios.post(
-        `${BACKEND_URL}/ai/generate`,
+        "/api/ai/generate",
         {
           prompt,
           modelId: selectedPersonId,
@@ -54,8 +53,13 @@ export function GenerateImage() {
 
       // Start polling
       pollStatus(requestId);
-    } catch (error) {
-      toast.error("Failed to generate image");
+    } catch (error: any) {
+      if (error.response?.status === 402) {
+        toast.error("Insufficient credits or billing error");
+        // Optionally show a modal or link to upgrade
+      } else {
+        toast.error("Failed to generate image");
+      }
       setIsGenerating(false);
     }
   };
@@ -64,7 +68,7 @@ export function GenerateImage() {
     const token = await getToken();
     const interval = setInterval(async () => {
       try {
-        const res = await axios.get(`${BACKEND_URL}/ai/status/${id}`, {
+        const res = await axios.get(`/api/ai/status/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const { status, result, error } = res.data.status;
