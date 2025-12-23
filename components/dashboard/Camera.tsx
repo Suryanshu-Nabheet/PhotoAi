@@ -75,8 +75,8 @@ export function Camera() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold">Your Gallery</h2>
-        <span className="text-xs select-none bg-secondary/40 font-semibold border border-secondary text-muted-foreground px-2 py-1 rounded-full">
+        <h2 className="text-2xl font-semibold text-white">Your Gallery</h2>
+        <span className="text-xs select-none bg-white/10 font-medium border border-white/10 text-white px-3 py-1 rounded-full backdrop-blur-sm shadow-sm">
           {images.length} images
         </span>
       </div>

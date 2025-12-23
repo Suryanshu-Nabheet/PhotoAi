@@ -77,17 +77,17 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="relative">
+    <footer className="relative border-t border-white/10">
       <div
         className={cn(
-          "mx-auto max-w-5xl lg:border-x",
-          "dark:bg-[radial-gradient(35%_80%_at_30%_0%,--theme(--color-foreground/.1),transparent)]"
+          "mx-auto max-w-5xl border-x border-white/10",
+          "bg-black/20 backdrop-blur-sm"
         )}
       >
-        <div className="absolute inset-x-0 h-px w-full bg-border" />
+        <div className="absolute inset-x-0 h-px w-full bg-white/5" />
         <div className="grid max-w-5xl grid-cols-6 gap-6 p-4">
           <div className="col-span-6 flex flex-col gap-4 pt-5 md:col-span-4">
-            <Logo />
+            <Logo className="text-white" />
             <p className="max-w-sm text-balance font-mono text-muted-foreground text-sm">
               Transform your vision into reality with AI-powered image
               generation.
@@ -98,6 +98,7 @@ export default function Footer() {
                   key={`social-${item.link}-${index}`}
                   size="icon-sm"
                   variant="outline"
+                  className="border-white/10 bg-white/5 hover:bg-white/10 text-white"
                 >
                   <a href={item.link} target="_blank" rel="noopener noreferrer">
                     <item.icon className="size-3.5" />
@@ -111,7 +112,7 @@ export default function Footer() {
             <div className="mt-2 flex flex-col gap-2">
               {resources.map(({ href, title }) => (
                 <a
-                  className="w-max text-sm hover:underline"
+                  className="w-max text-sm hover:underline hover:text-white text-muted-foreground/80 transition-colors"
                   href={href}
                   key={title}
                 >
@@ -125,7 +126,7 @@ export default function Footer() {
             <div className="mt-2 flex flex-col gap-2">
               {company.map(({ href, title }) => (
                 <a
-                  className="w-max text-sm hover:underline"
+                  className="w-max text-sm hover:underline hover:text-white text-muted-foreground/80 transition-colors"
                   href={href}
                   key={title}
                 >
@@ -135,7 +136,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="absolute inset-x-0 h-px w-full bg-border" />
+        <div className="absolute inset-x-0 h-px w-full bg-white/5" />
         <div className="flex max-w-4xl flex-col justify-between gap-2 py-4 px-4">
           <p className="text-center font-light text-muted-foreground text-sm">
             &copy; {new Date().getFullYear()} PhotoAI. All rights reserved.

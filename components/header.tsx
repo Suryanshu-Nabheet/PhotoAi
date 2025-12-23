@@ -15,9 +15,9 @@ export function Header() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full border-b border-transparent bg-background/5 backdrop-blur-sm transition-all",
+        "sticky top-0 z-50 w-full border-b border-white/5 bg-black/10 backdrop-blur-md transition-all duration-300",
         {
-          "border-white/10 bg-background/80 supports-[backdrop-filter]:bg-background/60 shadow-sm":
+          "border-white/10 bg-black/70 shadow-lg supports-[backdrop-filter]:bg-black/60":
             scrolled,
         }
       )}
@@ -25,7 +25,7 @@ export function Header() {
       <nav className="mx-auto flex h-14 w-full max-w-7xl items-center justify-between px-4 md:px-6">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-xl font-bold tracking-tight text-foreground">
+            <span className="text-xl font-bold tracking-tight text-white">
               PhotoAI
             </span>
           </Link>

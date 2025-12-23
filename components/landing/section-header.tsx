@@ -23,8 +23,10 @@ export function SectionHeader({
         className
       )}
     >
-      <div className="bg-muted flex items-center gap-2.5 rounded-full border px-3 py-2">
-        <Badge className="text-sm">{badge}</Badge>
+      <div className="bg-white/5 border-white/10 flex items-center gap-2.5 rounded-full border px-3 py-2 backdrop-blur-sm">
+        <Badge className="text-sm bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border-blue-500/20">
+          {badge}
+        </Badge>
       </div>
 
       <h2 className="text-3xl leading-[1.29167] font-bold text-balance sm:text-4xl lg:text-5xl text-white">

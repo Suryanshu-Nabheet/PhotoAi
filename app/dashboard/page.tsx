@@ -15,7 +15,7 @@ import Train from "@/components/dashboard/TrainModel";
 
 export default function DashboardPage() {
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-black text-white">
       <Header />
 
       <SignedOut>
@@ -96,7 +96,7 @@ export default function DashboardPage() {
           <div className="max-w-6xl mx-auto px-4 py-8">
             <h1 className="text-3xl font-bold mb-8 text-white">Dashboard</h1>
             <Tabs defaultValue="camera" className="w-full">
-              <TabsList className="grid w-full grid-cols-4 bg-gray-900">
+              <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="camera">Camera</TabsTrigger>
                 <TabsTrigger value="generate">Generate</TabsTrigger>
                 <TabsTrigger value="packs">Packs</TabsTrigger>

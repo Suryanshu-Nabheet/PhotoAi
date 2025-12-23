@@ -107,17 +107,21 @@ export default function Train() {
       transition={{ duration: 0.5 }}
       className="w-full max-w-2xl mx-auto"
     >
-      <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
+      <Card className="border-white/10 bg-black/80 backdrop-blur-md shadow-2xl">
         <CardHeader>
-          <CardTitle className="text-2xl">Train Custom Model</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-2xl text-white">
+            Train Custom Model
+          </CardTitle>
+          <CardDescription className="text-gray-400">
             Create a personalized AI model by uploading photos and specifying
             attributes.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="name">Model Name</Label>
+            <Label htmlFor="name" className="text-gray-300">
+              Model Name
+            </Label>
             <Input
               id="name"
               placeholder="e.g. My Professional Avatar"
@@ -128,7 +132,9 @@ export default function Train() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="type">Type</Label>
+              <Label htmlFor="type" className="text-gray-300">
+                Type
+              </Label>
               <Select value={type} onValueChange={setType}>
                 <SelectTrigger id="type">
                   <SelectValue placeholder="Select type" />
@@ -142,7 +148,9 @@ export default function Train() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="age">Age</Label>
+              <Label htmlFor="age" className="text-gray-300">
+                Age
+              </Label>
               <Input
                 id="age"
                 type="number"
@@ -153,7 +161,9 @@ export default function Train() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="ethnicity">Ethnicity</Label>
+              <Label htmlFor="ethnicity" className="text-gray-300">
+                Ethnicity
+              </Label>
               <Select value={ethinicity} onValueChange={setEthinicity}>
                 <SelectTrigger id="ethnicity">
                   <SelectValue placeholder="Select ethnicity" />
@@ -173,7 +183,9 @@ export default function Train() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="eyeColor">Eye Color</Label>
+              <Label htmlFor="eyeColor" className="text-gray-300">
+                Eye Color
+              </Label>
               <Select value={eyeColor} onValueChange={setEyeColor}>
                 <SelectTrigger id="eyeColor">
                   <SelectValue placeholder="Select eye color" />
@@ -188,15 +200,17 @@ export default function Train() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between p-4 border rounded-lg bg-muted/50">
-            <Label htmlFor="bald" className="cursor-pointer">
+          <div className="flex items-center justify-between p-4 border border-white/10 rounded-lg bg-white/5">
+            <Label htmlFor="bald" className="cursor-pointer text-gray-300">
               Bald / Shaved Head
             </Label>
             <Switch id="bald" checked={bald} onCheckedChange={setBald} />
           </div>
 
           <div className="space-y-2">
-            <Label>Training Images (10-20 photos)</Label>
+            <Label className="text-gray-300">
+              Training Images (10-20 photos)
+            </Label>
             <UploadModal
               handleUpload={async (files) => {
                 if (files.length < 5) {
@@ -242,7 +256,11 @@ export default function Train() {
           </div>
         </CardContent>
         <CardFooter className="flex justify-between border-t pt-6">
-          <Button variant="ghost" onClick={() => router.push("/")}>
+          <Button
+            variant="ghost"
+            onClick={() => router.push("/")}
+            className="text-gray-400 hover:text-white hover:bg-white/5"
+          >
             Cancel
           </Button>
           <Button

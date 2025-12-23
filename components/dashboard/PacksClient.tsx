@@ -19,7 +19,7 @@ export function PacksClient({ packs }: { packs: TPack[] }) {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-background/50 mx-auto">
+    <div className="min-h-screen bg-transparent mx-auto text-white">
       <div className="container mx-auto md:px-8 pt-4">
         {/* Filters Section */}
         <motion.div
@@ -39,11 +39,11 @@ export function PacksClient({ packs }: { packs: TPack[] }) {
         </motion.div>
 
         <div className="md:space-y-1">
-          <h2 className="md:text-2xl text-xl font-semibold tracking-tight">
+          <h2 className="md:text-2xl text-xl font-semibold tracking-tight text-white">
             Select Pack
           </h2>
-          <p className="text-sm text-muted-foreground">
-            Chose a pack to generate images with
+          <p className="text-sm text-gray-400">
+            Choose a pack to generate images with
           </p>
         </div>
         <motion.div

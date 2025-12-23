@@ -83,7 +83,7 @@ export function PackCard(props: TPack & { selectedModelId: string }) {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Card className="group h-full overflow-hidden border bg-card hover:shadow-xl hover:shadow-primary/20 transition-all duration-300">
+          <Card className="group h-full overflow-hidden border border-white/10 bg-black/40 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 backdrop-blur-sm">
             <CardHeader className="p-0">
               {images.length > 1 ? (
                 // Render Carousel if there are more than 2 images
@@ -114,7 +114,7 @@ export function PackCard(props: TPack & { selectedModelId: string }) {
                 </Carousel>
               ) : (
                 // Render a grid of images if there are 2 or fewer images
-                <div className="grid grid-cols-1 bg-muted/20">
+                <div className="grid grid-cols-1 bg-white/5">
                   {images.map((imageUrl, index) => (
                     <div key={index} className="relative aspect-square">
                       <Image
@@ -149,12 +149,12 @@ export function PackCard(props: TPack & { selectedModelId: string }) {
                 )}
               </div>
 
-              <p className="text-sm text-muted-foreground line-clamp-2">
+              <p className="text-sm text-gray-300 line-clamp-2">
                 {props.description}
               </p>
 
               {props.createdAt && (
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-gray-400">
                   Added {new Date(props.createdAt).toLocaleDateString()}
                 </p>
               )}

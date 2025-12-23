@@ -119,7 +119,7 @@ export default function PricingSection() {
                   <PricingCard.ListItem className="text-xs" key={item}>
                     <CheckCircle2
                       aria-hidden="true"
-                      className="h-4 w-4 text-foreground"
+                      className="h-4 w-4 text-blue-500"
                     />
                     <span>{item}</span>
                   </PricingCard.ListItem>

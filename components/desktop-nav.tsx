@@ -9,12 +9,12 @@ export function DesktopNav() {
   ];
 
   return (
-    <div className="hidden md:flex gap-6 items-center">
+    <div className="hidden md:flex gap-1">
       {links.map((link) => (
         <Link
           key={link.name}
           href={link.href}
-          className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-full transition-all duration-300"
         >
           {link.name}
         </Link>

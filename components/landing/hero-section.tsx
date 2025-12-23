@@ -70,10 +70,10 @@ const HeroSection = () => {
             </div>
 
             {/* Headline */}
-            <h1 className="text-4xl leading-[1.1] font-bold text-balance sm:text-5xl lg:text-7xl text-white drop-shadow-2xl">
-              Create Stunning AI Images
+            <h1 className="text-4xl leading-[1.1] font-bold text-balance sm:text-5xl lg:text-7xl drop-shadow-2xl">
+              <span className="gradient-text">Create Stunning AI Images</span>
               <br />
-              <span className="relative inline-block mt-2">
+              <span className="relative inline-block mt-2 text-white">
                 Effortlessly
                 <svg
                   width="223"
@@ -128,7 +128,7 @@ const HeroSection = () => {
                 size="lg"
                 variant="outline"
                 asChild
-                className="h-12 px-8 text-lg rounded-full bg-white/5 border-white/10 text-white hover:bg-white/10 backdrop-blur-sm"
+                className="h-12 px-8 text-lg rounded-full bg-white/5 border-white/10 text-white hover:bg-white/10 backdrop-blur-sm transition-all duration-300"
               >
                 <a href="#features">Learn More</a>
               </Button>

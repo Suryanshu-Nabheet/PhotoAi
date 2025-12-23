@@ -63,8 +63,8 @@ export function MobileNav() {
         createPortal(
           <div
             className={cn(
-              "bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/50",
-              "fixed top-14 right-0 bottom-0 left-0 z-40 flex flex-col overflow-hidden border-t md:hidden"
+              "bg-black/90 backdrop-blur-md",
+              "fixed top-14 right-0 bottom-0 left-0 z-40 flex flex-col overflow-hidden border-t border-white/10 md:hidden"
             )}
             id="mobile-menu"
           >
@@ -80,7 +80,7 @@ export function MobileNav() {
                   <Link
                     key={link.name}
                     href={link.href}
-                    className="text-lg font-medium text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-lg font-medium text-gray-300 hover:text-white transition-colors"
                     onClick={() => setOpen(false)}
                   >
                     {link.name}

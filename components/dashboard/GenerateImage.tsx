@@ -110,9 +110,12 @@ export function GenerateImage() {
           transition={{ delay: 0.2 }}
           className="relative w-full"
         >
-          <CustomLabel label="Enter your prompt here..." />
+          <CustomLabel
+            label="Enter your prompt here..."
+            className="text-gray-300"
+          />
           <Textarea
-            className="w-full min-h-24"
+            className="w-full min-h-24 bg-white/5 border-white/10 text-white placeholder:text-gray-500"
             onChange={(e) => setPrompt(e.target.value)}
             value={prompt}
           />

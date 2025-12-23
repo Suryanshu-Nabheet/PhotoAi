@@ -5,8 +5,8 @@ function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       className={cn(
-        "relative w-full max-w-xs rounded-xl border bg-card dark:bg-transparent",
-        "p-1.5 shadow-xs backdrop-blur-xl",
+        "relative w-full max-w-xs rounded-xl border border-white/10 bg-black/40",
+        "p-1.5 shadow-xl backdrop-blur-xl transition-all duration-300 hover:bg-black/50 hover:border-white/20",
         className
       )}
       {...props}
@@ -25,7 +25,7 @@ function Header({
   return (
     <div
       className={cn(
-        "relative mb-4 rounded-xl border bg-muted/50 p-4 shadow-sm",
+        "relative mb-4 rounded-xl border border-white/10 bg-white/5 p-4 shadow-sm backdrop-blur-sm",
         className
       )}
       {...props}
@@ -77,7 +77,7 @@ function Badge({ className, ...props }: React.ComponentProps<"span">) {
   return (
     <span
       className={cn(
-        "rounded-full border border-foreground/20 px-2 py-0.5 text-foreground/80 text-xs",
+        "rounded-full bg-gradient-to-r from-blue-600/20 to-indigo-600/20 border border-blue-500/30 px-3 py-1 text-blue-300 text-xs font-semibold shadow-[0_0_10px_-4px_rgba(59,130,246,0.5)]",
         className
       )}
       {...props}
@@ -132,10 +132,7 @@ function List({ className, ...props }: React.ComponentProps<"ul">) {
 function ListItem({ className, ...props }: React.ComponentProps<"li">) {
   return (
     <li
-      className={cn(
-        "flex items-start gap-3 text-muted-foreground text-sm",
-        className
-      )}
+      className={cn("flex items-start gap-3 text-gray-300 text-sm", className)}
       {...props}
     />
   );

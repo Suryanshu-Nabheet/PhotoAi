@@ -40,10 +40,10 @@ export function PersonSelector({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="md:space-y-1">
-          <h2 className="md:text-2xl text-xl font-semibold tracking-tight">
+          <h2 className="md:text-2xl text-xl font-semibold tracking-tight text-white">
             Select Person
           </h2>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-gray-400">
             Choose the person you want to generate images of
           </p>
         </div>
@@ -59,10 +59,10 @@ export function PersonSelector({
           <motion.div key={person.id} variants={item}>
             <Card
               className={cn(
-                "group relative overflow-hidden transition-all duration-300 hover:shadow-xl cursor-pointer hover:border-primary/50",
+                "group relative overflow-hidden transition-all duration-300 hover:shadow-xl cursor-pointer hover:border-blue-500/50",
                 selectedPersonId === person.id
-                  ? "ring-2 ring-primary border-primary"
-                  : "border-muted"
+                  ? "ring-2 ring-blue-500 border-blue-500 shadow-blue-500/20"
+                  : "border-white/10"
               )}
               onClick={() => onSelect(person.id)}
             >
@@ -75,7 +75,7 @@ export function PersonSelector({
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-muted">
+                  <div className="w-full h-full flex items-center justify-center bg-white/5">
                     <User className="w-10 h-10 text-muted-foreground" />
                   </div>
                 )}
