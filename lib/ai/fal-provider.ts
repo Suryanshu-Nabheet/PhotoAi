@@ -26,23 +26,33 @@ export class FalProvider implements AIProvider {
 
   async trainModel(params: TrainModelParams): Promise<{ requestId: string }> {
     try {
+      console.log("Starting FAL AI training with params:", {
+        name: params.name,
+        type: params.type,
+        zipUrl: params.zipUrl,
+      });
+
       const response = await axios.post(
         `${FAL_QUEUE_URL}${TRAIN_MODEL}`,
         {
           images_data_url: params.zipUrl,
-          trigger_word: params.type,
+          trigger_word: params.name.toLowerCase().replace(/\s+/g, "_"), // Use name as trigger word
+          steps: 1000, // Required for training
+          learning_rate: 0.0004, // Recommended learning rate
         },
         { headers: this.getHeaders() }
       );
+
+      console.log("FAL AI training response:", response.data);
       return { requestId: `train:${response.data.request_id}` };
     } catch (error: any) {
       console.error(
         "Fal Training Error:",
         error.response?.data || error.message
       );
-      throw new Error(
-        error.response?.data?.detail || "Failed to start training"
-      );
+
+      const errorDetail = error.response?.data?.detail || error.message;
+      throw new Error(`Training failed: ${errorDetail}`);
     }
   }
 
@@ -50,28 +60,44 @@ export class FalProvider implements AIProvider {
     params: GenerateImageParams
   ): Promise<{ requestId: string }> {
     try {
+      console.log("Starting image generation with params:", {
+        prompt: params.prompt,
+        modelId: params.modelId,
+      });
+
       let loraUrl = undefined;
 
-      // If modelId is provided and it's a "train:..." ID, we need to fetch the LoRA URL from the result
+      // If modelId is provided and it's a "train:..." ID, fetch the LoRA URL
       if (params.modelId) {
         if (params.modelId.startsWith("http")) {
+          // Direct LoRA URL
           loraUrl = params.modelId;
         } else if (params.modelId.startsWith("train:")) {
+          // Fetch training status to get LoRA URL
           const status = await this.getStatus(params.modelId);
+          console.log("Training status for generation:", status);
+
           if (status.status === "completed" && status.result) {
-            // Fal training result structure: check logs or payload
-            // Usually it's in `diffusers_lora_file` or `lora_path`
             const result = status.result;
+            // FAL AI returns LoRA in diffusers_lora_file.url
             if (result.diffusers_lora_file?.url) {
               loraUrl = result.diffusers_lora_file.url;
+              console.log("Using LoRA URL:", loraUrl);
+            } else {
+              console.error(
+                "Training completed but no LoRA URL found:",
+                result
+              );
+              throw new Error("Training completed but LoRA model not found");
             }
           } else if (status.status === "failed") {
-            throw new Error("The selected model failed to train.");
+            throw new Error(
+              `Model training failed: ${status.error || "Unknown error"}`
+            );
           } else {
-            // It's presumably still training
-            // For now, we allow generation to "fail" or queue without LoRA?
-            // No, we should probably error out if the model isn't ready.
-            throw new Error("Model is still training. Please wait.");
+            throw new Error(
+              `Model is still ${status.status}. Please wait for training to complete.`
+            );
           }
         }
       }
@@ -89,6 +115,7 @@ export class FalProvider implements AIProvider {
 
       if (loraUrl) {
         payload.loras = [{ path: loraUrl, scale: 1.0 }];
+        console.log("Generating with LoRA:", loraUrl);
       }
 
       const response = await axios.post(
@@ -96,22 +123,24 @@ export class FalProvider implements AIProvider {
         payload,
         { headers: this.getHeaders() }
       );
+
+      console.log("FAL AI generation response:", response.data);
       return { requestId: `gen:${response.data.request_id}` };
     } catch (error: any) {
       console.error(
         "Fal Generation Error:",
         error.response?.data || error.message
       );
-      throw new Error(
-        error.response?.data?.detail || "Failed to start generation"
-      );
+
+      const errorDetail = error.response?.data?.detail || error.message;
+      throw new Error(`Generation failed: ${errorDetail}`);
     }
   }
 
   async getStatus(requestId: string): Promise<JobStatus> {
     const [type, id] = requestId.split(":");
     if (!id) {
-      // Fallback for raw IDs if any
+      console.error("Invalid request ID format:", requestId);
       return {
         requestId,
         status: "failed",
@@ -128,6 +157,11 @@ export class FalProvider implements AIProvider {
       );
 
       const data = response.data;
+      console.log(`Status check for ${type}:${id}:`, {
+        status: data.status,
+        hasPayload: !!data.payload,
+      });
+
       // Map Fal status to our status
       // Fal status: IN_QUEUE, IN_PROGRESS, COMPLETED, FAILED
       let status: JobStatus["status"] = "queued";
@@ -135,19 +169,40 @@ export class FalProvider implements AIProvider {
       if (data.status === "COMPLETED") status = "completed";
       if (data.status === "FAILED") status = "failed";
 
+      // For completed training, extract images from result
+      let result = data.response_data || data.payload;
+
+      // For image generation, extract the images array
+      if (type === "gen" && status === "completed" && result?.images) {
+        result = result.images;
+      }
+
       return {
         requestId,
         status,
-        result: data.payload, // The result is in payload
+        result,
         error: data.error,
-        progress: data.logs ? data.logs.length : undefined, // Rough proxy
+        progress: data.logs ? data.logs.length : undefined,
       };
     } catch (error: any) {
-      // If 404, maybe it doesn't exist?
+      console.error(
+        `Error checking status for ${requestId}:`,
+        error.response?.data || error.message
+      );
+
+      // If 404, job doesn't exist
+      if (error.response?.status === 404) {
+        return {
+          requestId,
+          status: "failed",
+          error: "Job not found - it may have expired",
+        };
+      }
+
       return {
         requestId,
         status: "failed",
-        error: "Job not found on provider",
+        error: error.response?.data?.detail || "Failed to check job status",
       };
     }
   }

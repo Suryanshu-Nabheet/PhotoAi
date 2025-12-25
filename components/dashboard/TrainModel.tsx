@@ -30,7 +30,7 @@ import { useDashboard } from "./DashboardContext";
 
 export default function Train() {
   const { getToken } = useAuth();
-  const { addPerson } = useDashboard();
+  const { refreshPersons } = useDashboard();
 
   const [zipUrl, setZipUrl] = useState("");
   const [type, setType] = useState("Man");
@@ -67,14 +67,8 @@ export default function Train() {
         },
       });
 
-      // Add to local context
-      addPerson({
-        id: response.data.requestId || `temp-${Date.now()}`,
-        name: name,
-        thumbnail: `https://placehold.co/600x600/png?text=${encodeURIComponent(
-          name
-        )}`,
-      });
+      // Refresh persons list from database
+      await refreshPersons();
 
       toast.success("Training started successfully!");
       // We don't navigate away, just reset form or let user switch tabs

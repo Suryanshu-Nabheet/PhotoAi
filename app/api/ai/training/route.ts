@@ -42,16 +42,15 @@ export async function POST(request: NextRequest) {
       zipUrl: parsedBody.data.zipUrl,
     });
 
-    // Save metadata to DB
+    console.log("Training started successfully:", requestId);
+
+    // Save metadata to DB with proper placeholder
     await db.addPerson({
-      id: requestId, // Use job ID as temporary person ID
+      id: requestId,
       name: parsedBody.data.name,
-      thumbnail: parsedBody.data.zipUrl, // Use zip URL or placeholder as thumbnail for now?
-      // Ideally we'd extract one image, but ZIP URL is what we have.
-      // Let's use a generic placeholder or the zipUrl if it was an image (it's not).
-      // For now, let's just save it. The UI might handle zipUrl gracefully or we need a designated thumbnail.
-      // The previous mock used placehold.co. Let's use a placeholder.
-      // ACTUALLY, the UI expects `thumbnail`. I'll use a placeholder for newly trained models until they are done.
+      thumbnail: `https://ui-avatars.com/api/?name=${encodeURIComponent(
+        parsedBody.data.name
+      )}&size=200&background=6366f1&color=fff`,
     });
 
     return NextResponse.json({
