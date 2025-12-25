@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// User model - stores user information
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  email     String?
+  name      String?
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  persons Person[]
+  images  Image[]
+
+  @@index([clerkId])
+}
+
+// Person model - stores trained AI models/persons
+model Person {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  name        String
+  thumbnail   String?
+  
+  // Training details
+  falRequestId String?  @unique // FAL AI training request ID
+  status       String   @default("training") // training, ready, failed
+  
+  // Model metadata
+  loraUrl      String?  // URL to the trained LoRA model
+  triggerWord  String?  // Trigger word for generation
+  
+  // Training parameters (for reference)
+  type         String?  // Man, Woman, Others
+  age          Int?
+  ethnicity    String?
+  eyeColor     String?
+  bald         Boolean  @default(false)
+  
+  // Timestamps
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  // Relations
+  images       Image[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([falRequestId])
+}
+
+// Image model - stores generated images
+model Image {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  personId       String?
+  person         Person?  @relation(fields: [personId], references: [id], onDelete: SetNull)
+  
+  imageUrl       String
+  prompt         String
+  
+  // Generation details
+  falRequestId   String?  @unique
+  status         String   @default("pending") // pending, completed, failed
+  
+  // Metadata
+  packId         String?  // If generated from a pack
+  width          Int?
+  height         Int?
+  
+  // Timestamps
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([userId])
+  @@index([personId])
+  @@index([status])
+  @@index([createdAt])
+}

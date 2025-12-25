@@ -140,7 +140,7 @@ export function GenerateImage() {
         </div>
 
         {/* Results Section */}
-        {generatedImages.length > 0 && (
+        {generatedImages && generatedImages.length > 0 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

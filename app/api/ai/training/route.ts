@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { getProvider } from "@/lib/ai";
-import { db } from "@/lib/db";
+import { personService, userService } from "@/lib/db";
 import { z } from "zod";
 
 const TrainModelSchema = z.object({
@@ -16,11 +16,14 @@ const TrainModelSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const { userId: clerkId } = await auth();
 
-    if (!userId) {
+    if (!clerkId) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+
+    // Find or create user
+    const user = await userService.findOrCreateUser(clerkId);
 
     const body = await request.json();
     const parsedBody = TrainModelSchema.safeParse(body);
@@ -32,6 +35,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Start training with FAL AI
     const { requestId } = await getProvider().trainModel({
       name: parsedBody.data.name,
       type: parsedBody.data.type,
@@ -44,18 +48,28 @@ export async function POST(request: NextRequest) {
 
     console.log("Training started successfully:", requestId);
 
-    // Save metadata to DB with proper placeholder
-    await db.addPerson({
-      id: requestId,
+    // Save to database with Prisma
+    const person = await personService.createPerson({
+      userId: user.id,
       name: parsedBody.data.name,
       thumbnail: `https://ui-avatars.com/api/?name=${encodeURIComponent(
         parsedBody.data.name
       )}&size=200&background=6366f1&color=fff`,
+      falRequestId: requestId,
+      type: parsedBody.data.type,
+      age: parsedBody.data.age,
+      ethnicity: parsedBody.data.ethnicity,
+      eyeColor: parsedBody.data.eyeColor,
+      bald: parsedBody.data.bald,
+      triggerWord: parsedBody.data.name.toLowerCase().replace(/\s+/g, "_"),
     });
+
+    console.log("Person saved to database:", person.id);
 
     return NextResponse.json({
       success: true,
       requestId: requestId,
+      personId: person.id,
       message: "Training job queued",
     });
   } catch (error) {
