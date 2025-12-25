@@ -11,11 +11,6 @@ import { Sparkles } from "lucide-react";
 import CustomLabel from "@/components/ui/customLabel";
 import { GlowEffect } from "@/components/dashboard/GlowEffect";
 import { PersonSelector } from "@/components/dashboard/PersonSelector";
-// ... imports
-
-// Note: I need to update the entire component to swap 'selectedModel' with 'selectedPersonId'
-// and remove the 'Models' import.
-
 import { useDashboard } from "./DashboardContext";
 
 export function GenerateImage() {

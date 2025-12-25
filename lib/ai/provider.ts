@@ -11,7 +11,7 @@ export interface TrainModelParams {
   name: string;
   type: string;
   age: number;
-  ethinicity: string;
+  ethnicity: string;
   eyeColor: string;
   bald: boolean;
   zipUrl: string;

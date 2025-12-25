@@ -35,7 +35,7 @@ export default function Train() {
   const [zipUrl, setZipUrl] = useState("");
   const [type, setType] = useState("Man");
   const [age, setAge] = useState<string>();
-  const [ethinicity, setEthinicity] = useState<string>();
+  const [ethnicity, setEthnicity] = useState<string>();
   const [eyeColor, setEyeColor] = useState<string>();
   const [bald, setBald] = useState(false);
   const [name, setName] = useState("");
@@ -43,7 +43,7 @@ export default function Train() {
   const router = useRouter();
 
   async function trainModel() {
-    if (!name || !zipUrl || !type || !age || !ethinicity || !eyeColor) {
+    if (!name || !zipUrl || !type || !age || !ethnicity || !eyeColor) {
       toast.error("Please fill all fields");
       return;
     }
@@ -54,7 +54,7 @@ export default function Train() {
         zipUrl,
         type,
         age: parseInt(age),
-        ethinicity,
+        ethnicity,
         eyeColor,
         bald,
         name,
@@ -164,7 +164,7 @@ export default function Train() {
               <Label htmlFor="ethnicity" className="text-gray-300">
                 Ethnicity
               </Label>
-              <Select value={ethinicity} onValueChange={setEthinicity}>
+              <Select value={ethnicity} onValueChange={setEthnicity}>
                 <SelectTrigger id="ethnicity">
                   <SelectValue placeholder="Select ethnicity" />
                 </SelectTrigger>
@@ -271,7 +271,7 @@ export default function Train() {
               !zipUrl ||
               !type ||
               !age ||
-              !ethinicity ||
+              !ethnicity ||
               !eyeColor
             }
             className="min-w-[140px]"

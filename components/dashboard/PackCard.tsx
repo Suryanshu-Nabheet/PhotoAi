@@ -30,11 +30,13 @@ import Autoplay from "embla-carousel-autoplay";
 export interface TPack {
   id: string;
   name: string;
+  description: string;
+  thumbnail: string; // Added for compatibility with Packs.tsx
   imageUrl1: string;
   imageUrl2: string;
   imageUrl3?: string; // Optional third image
   imageUrl4?: string; // Optional fourth image
-  description: string;
+  prompts?: string[]; // Added for compatibility with Packs.tsx
   category?: string;
   imagesCount?: number;
   createdAt?: string;

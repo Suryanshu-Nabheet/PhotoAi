@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Lock } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GenerateImage } from "@/components/dashboard/GenerateImage";
@@ -27,26 +28,7 @@ export default function DashboardPage() {
 
             <div className="flex flex-col items-center space-y-8 rounded-3xl border border-white/10 bg-black/40 px-8 py-12 text-center shadow-2xl backdrop-blur-xl">
               <div className="rounded-full bg-white/5 p-4 ring-1 ring-white/10">
-                {/* Importing LockIcon dynamically or assuming generic svg usage if not imported. 
-                     Let's use a simple SVG to avoid import errors if Lucide isn't standard here, 
-                     but previous files used Lucide so I will try to use a Lucide icon if I can import it, 
-                     OR just an SVG to be safe and self-contained in this block since I can't easily see imports at top right now without another tool call. 
-                     Wait, I can replace the whole file content or just a block.
-                     SAFE BET: Use standard SVG to avoid 'Icon not found' if I don't check imports. 
-                  */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-10 w-10 text-white"
-                >
-                  <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg>
+                <Lock className="h-10 w-10 text-white" />
               </div>
 
               <div className="space-y-4">
