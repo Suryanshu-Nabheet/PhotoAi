@@ -1,0 +1,15 @@
+{
+  "users": [
+    {
+      "id": "1e7f59d2-b611-4f12-9a19-7031433ee23e",
+      "clerkId": "user_3743q85gs57L2lpY6yuuA70mINc",
+      "email": null,
+      "name": null,
+      "imageUrl": null,
+      "createdAt": "2026-01-24T17:32:15.927Z",
+      "updatedAt": "2026-01-24T17:32:15.927Z"
+    }
+  ],
+  "persons": [],
+  "images": []
+}

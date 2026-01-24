@@ -30,7 +30,6 @@ Edit `.env` and add your keys:
 ### 3. Launch
 
 ```bash
-pnpm prisma migrate dev
 pnpm dev
 ```
 
@@ -39,14 +38,14 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## � Features
+## Features
 
 - **Custom Face Training**: Train your own LoRA models with 10 photos.
 - **Professional Generation**: 5 Hardcoded styles (Headshots, Cinematic, Fashion, etc.).
 - **Zero-Config Database**:
   - Automatically creates a local database on startup.
   - **No external setup required**.
-  - All data stays on your machine (`dev.db`).
+  - All data stays on your machine (`db.json`).
 - **Enterprise Security**: Clerk authentication & full data isolation per user.
 
 ---
@@ -55,14 +54,14 @@ Open [http://localhost:3000](http://localhost:3000).
 
 - **Core**: Next.js 15, TypeScript, Tailwind CSS
 - **AI Engine**: FAL.ai (Flux/Stable Diffusion)
-- **Database**: Prisma ORM + SQLite (Auto-managed)
+- **Database**: Local JSON Database (db.json)
 - **Auth**: Clerk
 
 ## 📂 Data Privacy & Storage
 
 This application follows a **"Local-First, Cloud-Compatible"** storage policy.
 
-- **Local**: By default, all trained models and images are stored in `dev.db` on your machine. This file is **never committed** to Git.
+- **Local**: By default, all trained models and images are stored in `db.json` on your machine. This file is **never committed** to Git.
 - **Clean**: The code is structured to keep your repository spotless. Only source code is tracked; user data remains private.
 
 ---
