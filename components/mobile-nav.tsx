@@ -18,7 +18,7 @@ export function MobileNav() {
     { name: "FAQs", href: "#faqs" },
   ];
 
-  // 🚫 Disable body scroll when open
+  // Disable body scroll when open
   React.useEffect(() => {
     if (open && isMobile) {
       document.body.style.overflow = "hidden";

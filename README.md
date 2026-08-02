@@ -6,7 +6,7 @@ A state-of-the-art, enterprise-grade SaaS platform for AI model training and ima
 
 ---
 
-## 🚀 Instant Setup
+## Instant Setup
 
 ### 1. Download & Install
 
@@ -50,14 +50,14 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## 🛠 Tech Architecture
+## Tech Architecture
 
 - **Core**: Next.js 15, TypeScript, Tailwind CSS
 - **AI Engine**: FAL.ai (Flux/Stable Diffusion)
 - **Database**: Local JSON Database (db.json)
 - **Auth**: Clerk
 
-## 📂 Data Privacy & Storage
+## Data Privacy & Storage
 
 This application follows a **"Local-First, Cloud-Compatible"** storage policy.
 
@@ -66,7 +66,7 @@ This application follows a **"Local-First, Cloud-Compatible"** storage policy.
 
 ---
 
-## 📄 License & Attribution
+## License & Attribution
 
 **Designed and Developed by Suryanshu Nabheet.**
 All rights reserved © 2025.
