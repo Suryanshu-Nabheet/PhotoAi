@@ -2,7 +2,7 @@
 
 **Created & Engineered by Suryanshu Nabheet**
 
-A state-of-the-art, enterprise-grade SaaS platform for AI model training and image generation. Built with a focus on scalability, security, and clean architecture.
+A SaaS platform for AI model training and image generation. Built with a focus on scalability, security, and clean architecture.
 
 ---
 
